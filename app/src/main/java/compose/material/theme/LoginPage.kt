@@ -3,6 +3,7 @@ package compose.material.theme
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.DragInteraction
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -36,8 +37,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 
+
+private lateinit var username: String
+private lateinit var password: String
 @Composable
-fun LoginPage(navController: NavController) {
+fun LoginPage(navController: NavController, loginHandler: LoginHandler) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -54,21 +58,23 @@ fun LoginPage(navController: NavController) {
                     color = MaterialTheme.colorScheme.onPrimary,
                     shape = RoundedCornerShape(25.dp, 5.dp, 25.dp, 5.dp)
                 )*/
-                .align(Alignment.BottomCenter),
+                .align(Alignment.TopCenter),
         ) {
 
             Image(
-                painter = painterResource(id = R.drawable.user_sign_in),
+                painter = painterResource(id = R.drawable.coop),
                 contentDescription = null,
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
-                    .height(180.dp)
-                    .fillMaxWidth(),
+                    .height(140.dp)
+                    .fillMaxWidth()
+                    .padding(top = 40.dp)
 
                 )
             Column(
-                modifier = Modifier.padding(16.dp)
-                .fillMaxWidth()
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth()
                     .verticalScroll(rememberScrollState())
                 ,
 
@@ -80,21 +86,35 @@ fun LoginPage(navController: NavController) {
 
                 //.........................Text: title
                 androidx.compose.material3.Text(
-                    text = "Sign In",
+                    text = "Welcome to Co-op Bank",
                     textAlign = TextAlign.Center,
                     modifier = Modifier
-                        .padding(top = 130.dp)
+                        .padding(top = 80.dp)
                         .fillMaxWidth(),
                     style = MaterialTheme.typography.headlineSmall,
-                    color = MaterialTheme.colorScheme.primary,
+                    color = Color(0xFF3C922E),
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(140.dp))
+
+                //.........................Text: title
+                androidx.compose.material3.Text(
+                    text = "Use your credentials to sign in",
+                    fontSize = 14.sp,
+                    textAlign = TextAlign.Start,
+
+                    modifier = Modifier
+                        .padding(34.dp, 80.dp, 0.dp, 0.dp)
+                        .fillMaxWidth(),
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = Color(0xFF3C922E),
+                )
+
                 SimpleOutlinedTextFieldSample()
 
                 Spacer(modifier = Modifier.padding(3.dp))
                 SimpleOutlinedPasswordTextField()
 
-                val gradientColor = listOf(Color(0xFF484BF1), Color(0xFF673AB7))
+                val gradientColor = listOf(Color(0xFF3C922E), Color(0xFF3AB74B))
                 val cornerRadius = 16.dp
 
 
@@ -155,8 +175,15 @@ fun LoginPage(navController: NavController) {
 
     }
 
+    Button(onClick = {
+        loginHandler.handleLogin(username, password)
+    }) {
+        Text("Login")
+    }
+
 
 }
+
 
 
 //...........................................................................
@@ -165,7 +192,7 @@ private fun GradientButton(
     gradientColors: List<Color>,
     cornerRadius: Dp,
     nameButton: String,
-    roundedCornerShape: RoundedCornerShape
+    roundedCornerShape: RoundedCornerShape,
 ) {
 
     androidx.compose.material3.Button(
@@ -205,7 +232,18 @@ private fun GradientButton(
             )
         }
     }
+   }
+@Composable
+fun LoginPage(loginHandler: LoginHandler) {
+    // ... your username and password fields
+    Button(onClick = {
+        loginHandler.handleLogin(username, password)
+    }) {
+        Text("Login")
+    }
 }
+
+
 
 
 //email id
@@ -214,6 +252,8 @@ private fun GradientButton(
 fun SimpleOutlinedTextFieldSample() {
     val keyboardController = LocalSoftwareKeyboardController.current
     var text by rememberSaveable { mutableStateOf("") }
+
+    username = text
 
     OutlinedTextField(
         value = text,
@@ -249,11 +289,13 @@ fun SimpleOutlinedTextFieldSample() {
 @Composable
 fun SimpleOutlinedPasswordTextField() {
     val keyboardController = LocalSoftwareKeyboardController.current
-    var password by rememberSaveable { mutableStateOf("") }
+    var pass by rememberSaveable { mutableStateOf("") }
     var passwordHidden by rememberSaveable { mutableStateOf(true) }
+
+    password = pass
     OutlinedTextField(
-        value = password,
-        onValueChange = { password = it },
+        value = pass ,
+        onValueChange = { pass = it },
         shape = RoundedCornerShape(topEnd =12.dp, bottomStart =12.dp),
         label = {
             Text("Enter Password",
