@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity(), LoginHandler {
 
         setContent {
             Material3ComposeTheme {
-                LoginApplication(){}
+                LoginApplication()
 
             }
         }
@@ -63,6 +63,7 @@ class MainActivity : ComponentActivity(), LoginHandler {
 
 
     override fun handleLogin(username: String, password: String) {
+
         val navController = LocalNavController.current
         try {
             val client = OkHttpClient()
@@ -81,12 +82,12 @@ class MainActivity : ComponentActivity(), LoginHandler {
                 // Handle successful response
                 val responseBody = response.body?.string()
 //                   Navigate to welcome page
-                HandleLoginResponse(true, navController)
+//                HandleLoginResponse(true, navController)
 
             } else {
                 // Handle error response
                 val errorBody = response.body?.string()
-                HandleLoginResponse(false, navController) // Pass NavController here
+//                HandleLoginResponse(false, navController) // Pass NavController here
             }
         } catch (e: Exception) {
             // Handle network or other errors
