@@ -171,7 +171,7 @@ fun RegisterPage(navController: NavController) {
 
 //...........................................................................
 @Composable
-private fun GradientButton(
+fun GradientButton(
     gradientColors: List<Color>,
     cornerRadius: Dp,
     nameButton: String,

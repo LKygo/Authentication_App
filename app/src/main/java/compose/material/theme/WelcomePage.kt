@@ -1,5 +1,7 @@
 package compose.material.theme
 
-class WelcomePage {
+import androidx.navigation.NavController
+
+class WelcomePage(navController: NavController)  {
 
 }

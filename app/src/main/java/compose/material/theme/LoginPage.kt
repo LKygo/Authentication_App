@@ -14,10 +14,12 @@ import androidx.compose.material.*
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -38,169 +40,188 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 
 
-private lateinit var username: String
-private lateinit var password: String
+var LocalText = staticCompositionLocalOf<String> { "" }
+var LocalPassword = staticCompositionLocalOf<String> { "" }
+
+
 @Composable
-fun LoginPage(navController: NavController, loginHandler: LoginHandler) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-            .background(
-                color = Color.Transparent,
-            )
+fun LoginPage(navController: NavController) {
+
+    var text by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
+
+    CompositionLocalProvider(
+        LocalText provides text,
+        LocalPassword provides password
     ) {
-
-
         Box(
             modifier = Modifier
-                /*.background(
+                .fillMaxWidth()
+                .fillMaxHeight()
+                .background(
+                    color = Color.Transparent,
+                )
+        ) {
+
+
+            Box(
+                modifier = Modifier
+                    /*.background(
                     color = MaterialTheme.colorScheme.onPrimary,
                     shape = RoundedCornerShape(25.dp, 5.dp, 25.dp, 5.dp)
                 )*/
-                .align(Alignment.TopCenter),
-        ) {
-
-            Image(
-                painter = painterResource(id = R.drawable.coop),
-                contentDescription = null,
-                contentScale = ContentScale.Fit,
-                modifier = Modifier
-                    .height(140.dp)
-                    .fillMaxWidth()
-                    .padding(top = 40.dp)
-
-                )
-            Column(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth()
-                    .verticalScroll(rememberScrollState())
-                ,
-
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .align(Alignment.TopCenter),
             ) {
 
-                //.........................Spacer
-                Spacer(modifier = Modifier.height(50.dp))
-
-                //.........................Text: title
-                androidx.compose.material3.Text(
-                    text = "Welcome to Co-op Bank",
-                    textAlign = TextAlign.Center,
+                Image(
+                    painter = painterResource(id = R.drawable.coop),
+                    contentDescription = null,
+                    contentScale = ContentScale.Fit,
                     modifier = Modifier
-                        .padding(top = 80.dp)
-                        .fillMaxWidth(),
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = Color(0xFF3C922E),
+                        .height(140.dp)
+                        .fillMaxWidth()
+                        .padding(top = 40.dp)
+
                 )
-                Spacer(modifier = Modifier.height(140.dp))
-
-                //.........................Text: title
-                androidx.compose.material3.Text(
-                    text = "Use your credentials to sign in",
-                    fontSize = 14.sp,
-                    textAlign = TextAlign.Start,
-
+                Column(
                     modifier = Modifier
-                        .padding(34.dp, 80.dp, 0.dp, 0.dp)
-                        .fillMaxWidth(),
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = Color(0xFF3C922E),
-                )
+                        .padding(16.dp)
+                        .fillMaxWidth()
+                        .verticalScroll(rememberScrollState()),
 
-                SimpleOutlinedTextFieldSample()
-
-                Spacer(modifier = Modifier.padding(3.dp))
-                SimpleOutlinedPasswordTextField()
-
-                val gradientColor = listOf(Color(0xFF3C922E), Color(0xFF3AB74B))
-                val cornerRadius = 16.dp
-
-
-                Spacer(modifier = Modifier.padding(10.dp))
-               /* Button(
-                    onClick = {},
-                    modifier = Modifier
-                        .fillMaxWidth(0.8f)
-                        .height(50.dp)
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(text = "Login", fontSize = 20.sp)
-                }*/
-                GradientButton(
-                    gradientColors = gradientColor,
-                    cornerRadius = cornerRadius,
-                    nameButton = "Login",
-                    roundedCornerShape = RoundedCornerShape(topStart = 30.dp,bottomEnd = 30.dp)
-                )
 
-                Spacer(modifier = Modifier.padding(10.dp))
-                androidx.compose.material3.TextButton(onClick = {
+                    //.........................Spacer
+                    Spacer(modifier = Modifier.height(50.dp))
 
-                    navController.navigate("register_page"){
-                        popUpTo(navController.graph.startDestinationId)
-                        launchSingleTop = true
+                    //.........................Text: title
+                    androidx.compose.material3.Text(
+                        text = "Welcome to Co-op Bank",
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .padding(top = 80.dp)
+                            .fillMaxWidth(),
+                        style = MaterialTheme.typography.headlineSmall,
+                        color = Color(0xFF3C922E),
+                    )
+                    Spacer(modifier = Modifier.height(140.dp))
+
+                    //.........................Text: title
+                    androidx.compose.material3.Text(
+                        text = "Use your credentials to sign in",
+                        fontSize = 14.sp,
+                        textAlign = TextAlign.Start,
+
+                        modifier = Modifier
+                            .padding(34.dp, 80.dp, 0.dp, 0.dp)
+                            .fillMaxWidth(),
+                        style = MaterialTheme.typography.headlineSmall,
+                        color = Color(0xFF3C922E),
+                    )
+
+                    SimpleOutlinedTextFieldSample()
+
+                    Spacer(modifier = Modifier.padding(3.dp))
+                    SimpleOutlinedPasswordTextField()
+
+                    val gradientColor = listOf(Color(0xFF3C922E), Color(0xFF3AB74B))
+                    val cornerRadius = 16.dp
+
+
+
+
+                    Spacer(modifier = Modifier.padding(10.dp))
+                    /* Button(
+                     onClick = {},
+                     modifier = Modifier
+                         .fillMaxWidth(0.8f)
+                         .height(50.dp)
+                 ) {
+                     Text(text = "Login", fontSize = 20.sp)
+                 }*/
+                    GradientButton(
+                        gradientColors = gradientColor,
+                        cornerRadius = cornerRadius,
+                        nameButton = "Login",
+                        roundedCornerShape = RoundedCornerShape(topStart = 30.dp, bottomEnd = 30.dp),
+
+                    )
+
+                    Spacer(modifier = Modifier.padding(10.dp))
+                    androidx.compose.material3.TextButton(onClick = {
+
+                        navController.navigate("register_page") {
+                            popUpTo(navController.graph.startDestinationId)
+                            launchSingleTop = true
+                        }
+
+                    }) {
+                        androidx.compose.material3.Text(
+                            text = "Create An Account",
+                            letterSpacing = 1.sp,
+                            style = MaterialTheme.typography.labelLarge
+                        )
                     }
 
-                }) {
-                    androidx.compose.material3.Text(
-                        text = "Create An Account",
-                        letterSpacing = 1.sp,
-                        style = MaterialTheme.typography.labelLarge
-                    )
-                }
 
+                    Spacer(modifier = Modifier.padding(5.dp))
+                    androidx.compose.material3.TextButton(onClick = {
 
-                Spacer(modifier = Modifier.padding(5.dp))
-                androidx.compose.material3.TextButton(onClick = {
+                        navController.navigate("reset_page") {
+                            popUpTo(navController.graph.startDestinationId)
+                            launchSingleTop = true
+                        }
 
-                    navController.navigate("reset_page"){
-                        popUpTo(navController.graph.startDestinationId)
-                        launchSingleTop = true
+                    }) {
+                        androidx.compose.material3.Text(
+                            text = "Reset Password",
+                            letterSpacing = 1.sp,
+                            style = MaterialTheme.typography.labelLarge,
+                        )
                     }
+                    Spacer(modifier = Modifier.padding(20.dp))
 
-                }) {
-                    androidx.compose.material3.Text(
-                        text = "Reset Password",
-                        letterSpacing = 1.sp,
-                        style = MaterialTheme.typography.labelLarge,
-                    )
                 }
-                Spacer(modifier = Modifier.padding(20.dp))
+
 
             }
 
-
         }
-
     }
-
-    Button(onClick = {
-        loginHandler.handleLogin(username, password)
-    }) {
-        Text("Login")
-    }
-
 
 }
 
 
-
 //...........................................................................
 @Composable
-private fun GradientButton(
+fun GradientButton(
     gradientColors: List<Color>,
     cornerRadius: Dp,
     nameButton: String,
     roundedCornerShape: RoundedCornerShape,
+    navController: NavController,
+    onClick: () -> Unit
 ) {
+    val email = LocalText.current
+    val password = LocalPassword.current
 
     androidx.compose.material3.Button(
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 32.dp, end = 32.dp),
         onClick = {
-            //your code
+            //api call
+
+            ApiClient().sendLoginRequest(email, password) { response ->
+                if (response.contains("success")) {
+                    navController.navigate("welcome_page") // Navigate on success
+                } else {
+                    // Show error message
+                }
+
+            }
+
         },
 
         contentPadding = PaddingValues(),
@@ -232,18 +253,7 @@ private fun GradientButton(
             )
         }
     }
-   }
-@Composable
-fun LoginPage(loginHandler: LoginHandler) {
-    // ... your username and password fields
-    Button(onClick = {
-        loginHandler.handleLogin(username, password)
-    }) {
-        Text("Login")
-    }
 }
-
-
 
 
 //email id
@@ -251,19 +261,19 @@ fun LoginPage(loginHandler: LoginHandler) {
 @Composable
 fun SimpleOutlinedTextFieldSample() {
     val keyboardController = LocalSoftwareKeyboardController.current
-    var text by rememberSaveable { mutableStateOf("") }
-
-    username = text
+    val text = LocalText.current
 
     OutlinedTextField(
         value = text,
-        onValueChange = { text = it },
-        shape = RoundedCornerShape(topEnd =12.dp, bottomStart =12.dp),
+        onValueChange = { LocalText.current= it },
+        shape = RoundedCornerShape(topEnd = 12.dp, bottomStart = 12.dp),
         label = {
-            Text("Name or Email Address",
+            Text(
+                "Name or Email Address",
                 color = MaterialTheme.colorScheme.primary,
                 style = MaterialTheme.typography.labelMedium,
-            ) },
+            )
+        },
         placeholder = { Text(text = "Name or Email Address") },
         keyboardOptions = KeyboardOptions(
             imeAction = ImeAction.Next,
@@ -271,7 +281,8 @@ fun SimpleOutlinedTextFieldSample() {
         ),
         colors = TextFieldDefaults.outlinedTextFieldColors(
             focusedBorderColor = MaterialTheme.colorScheme.primary,
-            unfocusedBorderColor = MaterialTheme.colorScheme.primary),
+            unfocusedBorderColor = MaterialTheme.colorScheme.primary
+        ),
         singleLine = true,
         modifier = Modifier.fillMaxWidth(0.8f),
         keyboardActions = KeyboardActions(
@@ -289,19 +300,21 @@ fun SimpleOutlinedTextFieldSample() {
 @Composable
 fun SimpleOutlinedPasswordTextField() {
     val keyboardController = LocalSoftwareKeyboardController.current
-    var pass by rememberSaveable { mutableStateOf("") }
-    var passwordHidden by rememberSaveable { mutableStateOf(true) }
 
-    password = pass
+    var password = LocalPassword.current
+
+    var passwordHidden by rememberSaveable { mutableStateOf(true) }
     OutlinedTextField(
-        value = pass ,
-        onValueChange = { pass = it },
-        shape = RoundedCornerShape(topEnd =12.dp, bottomStart =12.dp),
+        value = password,
+        onValueChange = { password = it },
+        shape = RoundedCornerShape(topEnd = 12.dp, bottomStart = 12.dp),
         label = {
-            Text("Enter Password",
+            Text(
+                "Enter Password",
                 color = MaterialTheme.colorScheme.primary,
                 style = MaterialTheme.typography.labelMedium,
-            ) },
+            )
+        },
         visualTransformation =
         if (passwordHidden) PasswordVisualTransformation() else VisualTransformation.None,
         //  keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -311,7 +324,8 @@ fun SimpleOutlinedPasswordTextField() {
         ),
         colors = TextFieldDefaults.outlinedTextFieldColors(
             focusedBorderColor = MaterialTheme.colorScheme.primary,
-            unfocusedBorderColor = MaterialTheme.colorScheme.primary),
+            unfocusedBorderColor = MaterialTheme.colorScheme.primary
+        ),
         trailingIcon = {
             IconButton(onClick = { passwordHidden = !passwordHidden }) {
                 val visibilityIcon =
